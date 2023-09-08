@@ -15,5 +15,5 @@ app.get("/logout", mainController.logout);
 const checkInController = require("./controllers/check-in");
 app.get("/check-in", checkInController.get);
 
-app.listen(1000);
-console.log("Server is listening on port 1000");
+app.listen(8088);
+console.log("Server is listening on port 8088");
