@@ -1,0 +1,71 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-12 col-md-6 col-lg-4 mx-auto d-flex justify-content-center">
+			<form method="POST" id="signInForm">
+				<div class="mb-3 p-5">
+					<img class="img-fluid" src="/images/eb-logo-medium.png"/>
+				</div>
+
+				<h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
+
+				<div class="form-outline mb-4">
+					<input type="text" id="name" name="_name" class="form-control form-control-lg" placeholder="Name" required <% if(jwt) {%><%= 'disabled' %> } %><% } %>/>
+					<!--label class="form-label" for="name">Name</label-->
+				</div>
+
+				<div class="form-outline mb-4">
+					<input type="password" id="password" name="_password" placeholder="Password" class="form-control form-control-lg" required <% if(jwt) {%><%= 'disabled' %> } %><% } %>/>
+				</div>
+				<div class="pt-1 mb-4">
+					<button id="submit" class="btn btn-dark btn-lg btn-block w-100" type="submit" <% if(jwt) {%><%= 'disabled' %> } %><% } %>>Login</button>
+				</div>
+				<% if(error) { %>
+					<div class="text-center w-100">
+						<p class="text-danger d-inline-block">
+							<i class="bi bi-exclamation-diamond-fill"></i>
+							<%= error.message %>
+						</p>
+					</div>
+				<% } %>
+				<% if(jwt) { %>
+					<div class="text-center w-100">
+						<p class="d-inline-block">
+							<i class="bi bi-exclamation-diamond-fill"></i>
+							Signing in...
+						</p>
+					</div>
+					<input type="hidden" id="token" value="<%= jwt.token %>">
+					<input type="hidden" id="expiresIn" value="<%= jwt.expiresIn %>">
+				<% } %>
+			</form>
+			<script>
+				const data = JSON.parse(localStorage.getItem("data") || null);
+				const name = data?.name ? data.name : "";
+				document.getElementById("name").value = name;
+
+				const form = document.getElementById("signInForm");
+				if(form.attachEvent){
+					form.attachEvent("submit", updateLocalStorage);
+				}else{
+					form.addEventListener("submit", updateLocalStorage);
+				}
+
+				function updateLocalStorage(){
+					document.getElementById("submit").disabled = true;
+					let data = {
+						name: document.getElementById("name").value,
+						token: document.getElementById("token")?.value,
+						expires: document.getElementById("expiresIn")?.value ? Date.now() + document.getElementById("expiresIn")?.value : null
+					};
+					localStorage.setItem("data", JSON.stringify(data));
+				}
+
+				console.log(document.getElementById("token")?.value);
+				if(document.getElementById("token")?.value){
+					updateLocalStorage();
+					window.location.replace("/check-in");
+				}
+			</script>
+		</div>
+	</div>
+</div>

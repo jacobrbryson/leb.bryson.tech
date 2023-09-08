@@ -1,0 +1,14 @@
+{
+    "name": "Loudoun Empty Bowls",
+    "short_name": "Loudoun Empty Bowls",
+    "icons": [
+        {
+            "src": "/images/icon/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#98e4d9",
+    "background_color": "#98e4d9",
+    "display": "standalone"
+}
