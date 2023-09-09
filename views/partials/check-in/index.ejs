@@ -1,1 +1,24 @@
 <%- include('../header'); %>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-12 mt-2 d-flex justify-content-center">
+			<img height="100" src="/images/eb-logo-medium.png"/>
+		</div>
+		</div>
+	<div class="row">
+		<div class="col-12 col-md-10 mx-auto">
+			<h3>
+				Search for orders
+			</h3>
+			<form class="d-flex" id="search_form">
+				<div class="input-group mb-2">
+					<input id="search" class="form-control form-control-lg mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-lg btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+				</div>
+			</form>
+			<hr/>
+			<div id="orders"></div>
+		</div>
+	</div>
+</div>
+<script src="/js/check-in.js"></script>

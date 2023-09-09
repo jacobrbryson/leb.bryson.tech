@@ -1,0 +1,38 @@
+<div class="table-responsive">
+	<table class="table table-striped">
+		<% if(!orders?.length) { %>
+			<tr>
+				<td class="p-3">
+					No order records found
+				</td>
+			</tr>
+		<% } else { %>
+		<% orders.forEach(function(order) { %>
+			<tr>
+				<td class="p-3">
+					<span class="fw-bold d-block"><%= order[0] %></span>
+					<small class="text-muted"><%= order[2] %></span>
+				</td>
+				<td class="p-3">
+					<span class="d-block"><%= order[4] %>&nbsp;<%= order[5] %></span>
+					<small class="text-muted">
+						<%= order[12] %>
+					</small>
+				</td>
+				<td class="p-3">
+					<span class="d-block"><%= order[39] ? order[39] : 0 %>/<%= order[32] %></span>
+					<small class="text-muted">
+						avail/ordered
+					</small>
+				</td>
+				<td class="p-3">
+					<div class="d-flex align-items-center justify-content-end">
+						<button class="btn btn-lg btn-success my-auto"><i class="bi bi-gear"></i></button>
+					</div>
+				</td>
+			</tr>
+		<% }); 
+		} %> 
+	</table>
+</div>
+

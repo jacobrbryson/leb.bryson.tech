@@ -29,7 +29,7 @@ exports.login = async function(req, res){
 
 	try{
 		const token = jwt.sign({
-			exp: Math.floor(Date.now() / 1000) + config.jwt.expireInSeconds,
+			exp: Math.floor(Date.now()) + config.jwt.expireInSeconds * 1000,
 			userName: userName
 			},
 			config.jwt.secret
