@@ -37,7 +37,7 @@ exports.login = async function(req, res){
 
 		payload.jwt = {
 			token: token,
-			expiresIn: config.jwt.expireInSeconds
+			expiresIn: config.jwt.expireInSeconds * 1000
 		};
 	
 		return res.render("pages/home", payload);

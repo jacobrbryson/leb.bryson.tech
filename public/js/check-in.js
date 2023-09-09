@@ -16,21 +16,25 @@ function searchForOrders(){
 }
 
 function listOrders(){
+	const search = document.getElementById("search").value;
+
 	const orderContainer = document.getElementById("orders");
-	orderContainer.innerHTML = "Searching for orders...";
+	orderContainer.innerHTML = search ? "Searching for orders..." : "Enter a value in the search field above to begin...";
+
+	if(!search) return;
 
 	const data = JSON.parse(localStorage.getItem("data") || null);
 	if(!data?.token) logout();
 
 	const xhr = new XMLHttpRequest();
 
-	const search = document.getElementById("search").value;
+	
 	const url = `check-in/orders` + (search?.length ? `?search=${search}` : ``);
 	
 	xhr.open("GET", url, true);
 
 	xhr.setRequestHeader("Authorization", "Bearer " + data.token);
-	// function execute after request is successful
+
 	xhr.onreadystatechange = function () {
 		if(this.status == 401) return logout();
 
@@ -41,7 +45,7 @@ function listOrders(){
 
 		orderContainer.innerHTML = this.responseText;
 	}
-	// Sending our request
+
 	xhr.send();
 }
 
@@ -49,4 +53,4 @@ function logout(){
 	window.location.replace("/logout");
 }
 
-listOrders();
+if(checkTokenExpiration()) logout();

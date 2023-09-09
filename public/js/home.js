@@ -14,7 +14,7 @@ function updateLocalStorage(){
 	let data = {
 		name: document.getElementById("name").value,
 		token: document.getElementById("token")?.value,
-		expires: document.getElementById("expiresIn")?.value ? Date.now() + document.getElementById("expiresIn")?.value : null
+		expires: document.getElementById("expiresIn")?.value ? (Date.now() + Number(document.getElementById("expiresIn")?.value)) : null
 	};
 	localStorage.setItem("data", JSON.stringify(data));
 }
@@ -23,3 +23,9 @@ if(document.getElementById("token")?.value){
 	updateLocalStorage();
 	window.location.replace("/check-in");
 }
+
+function checkLoggedIn(){
+	if(!checkTokenExpiration()) window.location.replace("/check-in");
+}
+
+checkLoggedIn();
