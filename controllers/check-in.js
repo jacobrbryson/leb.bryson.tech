@@ -36,8 +36,6 @@ exports.checkInOrder = async function(req, res){
 	const orderId = req.params.orderId;
 	const partialAmount = req.params.partialAmount;
 
-	console.log(partialAmount);
-
 	if(isNaN(orderId)) return res.status(500).json({message: "Invalid order id"});
 
 	//Need the raw sheet data so we can get the correct row data
