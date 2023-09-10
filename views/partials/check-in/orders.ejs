@@ -25,40 +25,54 @@
 						avail&nbsp;/&nbsp;ordered
 					</small>
 				</td>
-				<td class="px-3 align-middle">
-						<div class="input-group justify-content-end">
+				<td class="px-3 align-middle justify-content-end">
+						<div class="d-flex float-end">
+							<% if(!isNaN(order[44]) > 0) { %>
+								<span class="d-flex align-items-center me-3">
+									<i class="bi bi-journal-text text-danger" style="transform: scale(2);"></i>
+									<sup>
+										<span class="badge rounded-pill bg-danger">
+											<%= order[44] %>
+											<span class="visually-hidden">notes</span>
+										</span>
+									</sup>
+								</span>
+							<% } %>
 							<% if(order[32] === order[39]) { %>
-								<span class="d-flex mx-4 align-items-center">
-									<i class="bi bi-check2-all px-3 text-success" style="transform: scale(2);"></i>Checked In!
+								<span class="d-flex me-2 align-items-center text-nowrap">
+									<i class="bi bi-check2-all me-2 text-success" style="transform: scale(2);"></i>Checked In!
 								</span>
 							<% } else if(!isNaN(order[39]) && order[39] > 0){ %>
-								<span class="d-flex mx-4 align-items-center">
-									<i class="bi bi-back px-3"></i>Partial
+								<span class="d-flex me-2 align-items-center">
+									<i class="bi bi-back me-2"></i>Partial
 								</span>
 							<% } %>
-							<button class="btn btn-lg btn-outline-success my-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-gear"></i></button>
-							<ul class="dropdown-menu">
-								<li>
-									<button class="dropdown-item" type="button" onclick="partialCheckIn('<%= order[0] %>')" disabled>
-										<i class="bi bi-back"></i>
-										&nbsp;&nbsp;&nbsp;Partial Check-in
-									</button>
-								</li>
-								<li>
-									<button class="dropdown-item" type="button" onclick="notes('<%= order[0] %>')" disabled>
-										<i class="bi bi-journal-text"></i>
-										&nbsp;&nbsp;&nbsp;Notes
-									</button>
-								</li>
-								<div class="dropdown-divider"></div>
-								<li><button class="dropdown-item" type="button" onclick="undoCheckIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();" <% if(order[39] == 0) { %> disabled <% } %>>
-									<i class="bi bi-arrow-counterclockwise"></i>
-									&nbsp;&nbsp;&nbsp;Undo Check-in
-								</button></li>
-							</ul>
-							<% if(order[32] != order[39]) { %>
-								<button class="btn btn-lg btn-success" onclick="checkIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();"><i class="bi bi-check-lg mx-2"></i><span class="mx-2">Check-in</span></button>
-							<% } %>
+							<div class="<% if(order[32] != order[39]) { %>input-group<% } %>">
+								<button class="btn btn-lg btn-outline-success my-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-gear"></i></button>
+								<ul class="dropdown-menu">
+									<li>
+										<button class="dropdown-item" type="button" onclick="partialCheckInModal('<%= order[0] %>')" <% if(order[39] == order[32]) { %> disabled <% } %>>
+											<i class="bi bi-back"></i>
+											&nbsp;&nbsp;&nbsp;Partial Check-in
+										</button>
+									</li>
+									<li>
+										<button class="dropdown-item" type="button" onclick="notesModal('<%= order[0] %>')">
+											<i class="bi bi-journal-text"></i>
+											&nbsp;&nbsp;&nbsp;Notes
+										</button>
+									</li>
+									<div class="dropdown-divider"></div>
+									<li><button class="dropdown-item" type="button" onclick="undoCheckIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();" <% if(order[39] == 0) { %> disabled <% } %>>
+										<i class="bi bi-arrow-counterclockwise"></i>
+										&nbsp;&nbsp;&nbsp;Undo Check-in
+									</button></li>
+								</ul>
+								<% if(order[32] != order[39]) { %>
+									<button class="btn btn-lg btn-success" onclick="checkIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();"><i class="bi bi-check-lg mx-2"></i><span class="mx-2">Check-in</span></button>
+								<% } %>
+							</div>
+							
 						</div>
 				</td>
 			</tr>

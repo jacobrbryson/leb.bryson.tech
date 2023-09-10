@@ -1,3 +1,6 @@
+let ORDER_ID;
+const PARTIAL_MODAL = new bootstrap.Modal(document.getElementById('partialModal'));
+
 function addSearchFormEvent(){
 	const form = document.getElementById("search_form");
 
@@ -13,7 +16,6 @@ function addSearchFormEvent(){
 		});
 	}
 }
-
 
 function searchForOrders(){
 	listOrders();
@@ -53,13 +55,13 @@ function listOrders(){
 	xhr.send();
 }
 
-function checkIn(orderId){
+function checkIn(orderId, amount){
 	const data = JSON.parse(localStorage.getItem("data") || null);
 	if(!data?.token) logout();
 
 	const xhr = new XMLHttpRequest();
 
-	const url = `check-in/orders/${orderId}/check-in`;
+	const url = `check-in/orders/${orderId}/check-in/${amount ? amount : ''}`;
 	
 	xhr.open("POST", url, true);
 
@@ -105,12 +107,24 @@ function undoCheckIn(orderId){
 	xhr.send();
 }
 
-function partialCheckIn(orderId){
-	console.log("Partial Check in: " + orderId);
+function partialCheckInModal(orderId){
+	ORDER_ID = orderId;
+	PARTIAL_MODAL.show();
 }
 
-function notes(orderId){
-	console.log("Notes: " + orderId);
+function partialCheckIn(){
+	const partialAmount = document.getElementById("partialAmount").value;
+	
+	PARTIAL_MODAL.hide();
+
+	checkIn(ORDER_ID, partialAmount);
+
+	document.getElementById("partialAmount").value = '';
+}
+
+function notesModal(orderId){
+	const modal = new bootstrap.Modal(document.getElementById('notesModal'));
+	modal.show();
 }
 
 function logout(){
