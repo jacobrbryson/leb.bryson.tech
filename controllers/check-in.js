@@ -1,6 +1,7 @@
 const config = require("../config");
 const authController = require("./auth");
 const sheetsController = require("./sheets");
+const orderSheet = "Sheet1";
 
 exports.get = async function(req, res){
 	return res.render("pages/check-in");
@@ -24,29 +25,106 @@ exports.listOrders = async function(req, res){
 	return res.render("partials/check-in/orders", {orders: orders });
 }
 
-async function getOrders(search = ""){
-	const orders = await sheetsController.getSheet(config.orderSheetId, "Sheet1").catch((error) => {
+exports.checkInOrder = async function(req, res){
+	await authController.verifyToken(req).catch((error) => {
+		console.error(error);
+	});
+
+	if(!req.userName) return res.status(401).send();
+
+	const orderId = req.params.orderId;
+	const partialAmount = req.params.partialAmount;
+
+	if(isNaN(orderId)) return res.status(500).json({message: "Invalid order id"});
+
+	//Need the raw sheet data so we can get the correct row data
+	const orders = await sheetsController.getSheet(config.orderSheetId, orderSheet).catch((error) => {
 		throw(error);
 	});
 
-	orders.shift();//Removes first header
-	orders.shift();//Removes the second header
+	let index = null;
+	for(i = 0; i < orders.length; i++){
+		if(orders[i][0] == orderId){
+			index = i;
+			break;
+		}
+	}
+
+	if(index == null) return res.status(500).json({ message: "Unable to locate order information to update"});
+	
+	const amount = !isNaN(partialAmount) ? partialAmount : orders[index][32];
+	const results = await sheetsController.updateSheet(
+		config.orderSheetId, orderSheet + `!AL${(index + 1)}:AP${(index + 1)}`, 
+		[[getDateString(),req.userName, amount, '', '']]
+	).catch((error) => {
+		console.error(error);
+	});
+
+	if(!results) return res.status(500).json({ message: "Failed to update order"});
+
+	res.json(true);
+}
+
+exports.undoCheckInOrder = async function(req, res){
+	await authController.verifyToken(req).catch((error) => {
+		console.error(error);
+	});
+
+	if(!req.userName) return res.status(401).send();
+
+	const orderId = req.params.orderId;
+	if(isNaN(orderId)) return res.status(500).json({message: "Invalid order id"});
+
+	//Need the raw sheet data so we can get the correct row data
+	const orders = await sheetsController.getSheet(config.orderSheetId, orderSheet).catch((error) => {
+		throw(error);
+	});
+
+	let index = null;
+	for(i = 0; i < orders.length; i++){
+		if(orders[i][0] == orderId){
+			index = i;
+			break;
+		}
+	}
+
+	if(index == null) return res.status(500).json({ message: "Unable to locate order information to update"});
+	
+	const results = await sheetsController.updateSheet(
+		config.orderSheetId, orderSheet + `!AL${(index + 1)}:AP${(index + 1)}`, 
+		[['','','',getDateString(),req.userName]]
+	).catch((error) => {
+		console.error(error);
+	});
+
+	if(!results) return res.status(500).json({ message: "Failed to update order"});
+
+	res.json(true);
+}
+
+async function getOrders(search){
+	const orders = await sheetsController.getSheet(config.orderSheetId, orderSheet).catch((error) => {
+		throw(error);
+	});
 
 	let filteredOrderArray = [];
 
-	if(search == "") return filteredOrderArray;//remove this line to make empty searches return all
-
 	for(const order of orders){
-		if(!order[0]?.length) continue;
+		if(!order[0]?.length || isNaN(order[0])) continue;
 
 		if(
 			order[0].includes(search)
 			|| order[4].includes(search)
 			|| order[5].includes(search)
 			|| order[12].includes(search)){
-			filteredOrderArray.push(order);
-		}
+				filteredOrderArray.push(order);
+			}
 	}
 
 	return filteredOrderArray;
+}
+
+function getDateString(){
+	const date = new Date();
+	return (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getUTCFullYear() + " " + date.getUTCHours() + ":" + date.getUTCMinutes();
 }

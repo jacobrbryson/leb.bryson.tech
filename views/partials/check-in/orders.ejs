@@ -27,8 +27,38 @@
 				</td>
 				<td class="px-3 align-middle">
 						<div class="input-group justify-content-end">
-							<button class="btn btn-lg btn-outline-success my-auto"><i class="bi bi-gear"></i></button>
-							<button class="btn btn-lg btn-success" type="submit"><i class="bi bi-check-lg mx-2"></i><span class="mx-2">Check-in</span></button>
+							<% if(order[32] === order[39]) { %>
+								<span class="d-flex mx-4 align-items-center">
+									<i class="bi bi-check2-all px-3 text-success" style="transform: scale(2);"></i>Checked In!
+								</span>
+							<% } else if(!isNaN(order[39]) && order[39] > 0){ %>
+								<span class="d-flex mx-4 align-items-center">
+									<i class="bi bi-back px-3"></i>Partial
+								</span>
+							<% } %>
+							<button class="btn btn-lg btn-outline-success my-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-gear"></i></button>
+							<ul class="dropdown-menu">
+								<li>
+									<button class="dropdown-item" type="button" onclick="partialCheckIn('<%= order[0] %>')" disabled>
+										<i class="bi bi-back"></i>
+										&nbsp;&nbsp;&nbsp;Partial Check-in
+									</button>
+								</li>
+								<li>
+									<button class="dropdown-item" type="button" onclick="notes('<%= order[0] %>')" disabled>
+										<i class="bi bi-journal-text"></i>
+										&nbsp;&nbsp;&nbsp;Notes
+									</button>
+								</li>
+								<div class="dropdown-divider"></div>
+								<li><button class="dropdown-item" type="button" onclick="undoCheckIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();" <% if(order[39] == 0) { %> disabled <% } %>>
+									<i class="bi bi-arrow-counterclockwise"></i>
+									&nbsp;&nbsp;&nbsp;Undo Check-in
+								</button></li>
+							</ul>
+							<% if(order[32] != order[39]) { %>
+								<button class="btn btn-lg btn-success" onclick="checkIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();"><i class="bi bi-check-lg mx-2"></i><span class="mx-2">Check-in</span></button>
+							<% } %>
 						</div>
 				</td>
 			</tr>

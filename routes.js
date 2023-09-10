@@ -9,5 +9,7 @@ module.exports = function(app) {
 
 	app.get("/check-in", checkInController.get);
 	app.get("/check-in/orders", checkInController.listOrders);
+	app.post("/check-in/orders/:orderId/check-in", checkInController.checkInOrder);
+	app.post("/check-in/orders/:orderId/check-in/:partialAmount", checkInController.checkInOrder);
+	app.post("/check-in/orders/:orderId/undo-check-in", checkInController.undoCheckInOrder);
 }
-
