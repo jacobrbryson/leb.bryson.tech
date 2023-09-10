@@ -113,11 +113,12 @@ async function getOrders(search){
 	for(const order of orders){
 		if(!order[0]?.length || isNaN(order[0])) continue;
 
+		search = search.toLowerCase();
 		if(
-			order[0].includes(search)
-			|| order[4].includes(search)
-			|| order[5].includes(search)
-			|| order[12].includes(search)){
+			order[0].toLowerCase().includes(search)
+			|| order[4].toLowerCase().includes(search)
+			|| order[5].toLowerCase().includes(search)
+			|| order[12].toLowerCase().includes(search)){
 				filteredOrderArray.push(order);
 			}
 	}
