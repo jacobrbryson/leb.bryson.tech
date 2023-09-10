@@ -46,3 +46,28 @@ exports.updateSheet = async function(sheetId, range, values){
 
   return(res);
 }
+
+exports.appendSheet = async function(sheetId, range, resource){
+	const auth = new Auth.GoogleAuth({
+		keyFile: config.keyFile,
+		scopes: "https://www.googleapis.com/auth/spreadsheets",
+	});
+
+	const client = await auth.getClient().catch((error) => {
+		throw error;
+	});
+
+	const sheets = google.sheets({version: 'v4', auth: client});
+
+	const res = await sheets.spreadsheets.values.append({
+    spreadsheetId: sheetId,
+    range: range,
+		valueInputOption: "USER_ENTERED",
+		insertDataOption: 'INSERT_ROWS',
+		resource: resource,
+  }).catch((error) => {
+		throw error;
+	});
+
+  return(res);
+}

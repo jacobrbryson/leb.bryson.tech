@@ -1,6 +1,7 @@
 const config = require("../config");
 const authController = require("./auth");
 const sheetsController = require("./sheets");
+const utilityHelper = require("../helpers/utility");
 const orderSheet = "Sheet1";
 
 exports.get = async function(req, res){
@@ -35,6 +36,8 @@ exports.checkInOrder = async function(req, res){
 	const orderId = req.params.orderId;
 	const partialAmount = req.params.partialAmount;
 
+	console.log(partialAmount);
+
 	if(isNaN(orderId)) return res.status(500).json({message: "Invalid order id"});
 
 	//Need the raw sheet data so we can get the correct row data
@@ -55,14 +58,14 @@ exports.checkInOrder = async function(req, res){
 	const amount = !isNaN(partialAmount) ? partialAmount : orders[index][32];
 	const results = await sheetsController.updateSheet(
 		config.orderSheetId, orderSheet + `!AL${(index + 1)}:AP${(index + 1)}`, 
-		[[getDateString(),req.userName, amount, '', '']]
+		[[utilityHelper.getDateString(),req.userName, amount, '', '']]
 	).catch((error) => {
 		console.error(error);
 	});
 
 	if(!results) return res.status(500).json({ message: "Failed to update order"});
 
-	res.json(true);
+	return res.send();
 }
 
 exports.undoCheckInOrder = async function(req, res){
@@ -92,7 +95,7 @@ exports.undoCheckInOrder = async function(req, res){
 	
 	const results = await sheetsController.updateSheet(
 		config.orderSheetId, orderSheet + `!AL${(index + 1)}:AP${(index + 1)}`, 
-		[['','','',getDateString(),req.userName]]
+		[['','','',utilityHelper.getDateString(),req.userName]]
 	).catch((error) => {
 		console.error(error);
 	});
@@ -124,7 +127,3 @@ async function getOrders(search){
 	return filteredOrderArray;
 }
 
-function getDateString(){
-	const date = new Date();
-	return (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getUTCFullYear() + " " + date.getUTCHours() + ":" + date.getUTCMinutes();
-}

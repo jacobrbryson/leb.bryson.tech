@@ -6,11 +6,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="input-group">
-          <input class="form-control form-control-lg" type="number" name="partialAmount" id="partialAmount" placeholder="Enter partial amount">
-          <button type="submit" class="btn btn-lg btn-success" onclick="partialCheckIn()"><span class="px-2">Save</span></button>
-        </div>
-        
+        <form id="partial_form">
+          <div class="input-group">
+            <input class="form-control form-control-lg" type="number" name="partialAmount" id="partialAmount" placeholder="Enter partial amount">
+            <button type="submit" class="btn btn-lg btn-success"><span class="px-2">Save</span></button>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -6,10 +6,20 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div id="notes_container">Loading notes...</div>
+        <div class="card bg-light">
+          <div class="card-body">
+            <div id="notes_container">Loading notes...</div>
+          </div>
+        </div>
+        <hr/>
+        <form id="note_form">
+          <label for="note" class="fw-bold">New Note</label>
+          <textarea class="form-control form-control-lc" id="note" rows="3"></textarea>
+          <button type="submit" class="btn btn-lg btn-success mt-2">Add Note</button>
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

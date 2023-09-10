@@ -1,0 +1,20 @@
+
+	<% if(!notes?.length) { %>
+
+					No notes exist for this order - start by creating one below!
+		
+	<% } else { %>
+		<% notes.forEach(function(note) { %>
+			<div class="row">
+				<div class="col-12 col-md-3">
+					<small class="text-muted"><%= note[1] %></small>
+				</div>
+				<div class="col-12 col-md-9">
+					<strong class="d-block"><%= note[2] %></strong>
+					<p>
+						<%= note[3] %>
+					</p>
+				</div>
+			</div>
+		<% }); %>
+	<% } %>

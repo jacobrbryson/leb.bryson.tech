@@ -1,18 +1,46 @@
 let ORDER_ID;
 const PARTIAL_MODAL = new bootstrap.Modal(document.getElementById('partialModal'));
 
-function addSearchFormEvent(){
-	const form = document.getElementById("search_form");
+function addFormEvents(){
+	const searchForm = document.getElementById("search_form");
 
-	if(form.attachEvent){
-		form.attachEvent("submit", function(event){
+	if(searchForm.attachEvent){
+		searchForm.attachEvent("submit", function(event){
 			event.preventDefault();
 			searchForOrders();
 		});
 	}else{
-		form.addEventListener("submit", function(event){
+		searchForm.addEventListener("submit", function(event){
 			event.preventDefault();
 			searchForOrders();
+		});
+	}
+
+	const partialForm = document.getElementById("partial_form");
+
+	if(partialForm.attachEvent){
+		partialForm.attachEvent("submit", function(event){
+			event.preventDefault();
+			partialCheckIn();
+		});
+	}else{
+		partialForm.addEventListener("submit", function(event){
+			event.preventDefault();
+			partialCheckIn();
+		});
+	}
+
+	const noteForm = document.getElementById("note_form");
+
+	if(noteForm.attachEvent){
+		noteForm.attachEvent("submit", function(event){
+			event.preventDefault();
+			addNote();
+		});
+	}else{
+		noteForm.addEventListener("submit", function(event){
+			event.preventDefault();
+			addNote();
 		});
 	}
 }
@@ -123,15 +151,78 @@ function partialCheckIn(){
 }
 
 function notesModal(orderId){
+	ORDER_ID = orderId;
+	getNotes(orderId)
 	const modal = new bootstrap.Modal(document.getElementById('notesModal'));
 	modal.show();
+}
+
+function getNotes(orderId){
+	const notesContainer = document.getElementById("notes_container");
+	notesContainer.innerHTML = "Loading notes...";
+
+	const data = JSON.parse(localStorage.getItem("data") || null);
+	if(!data?.token) logout();
+
+	const xhr = new XMLHttpRequest();
+
+	const url = `check-in/orders/${orderId}/notes`;
+	
+	xhr.open("GET", url, true);
+
+	xhr.setRequestHeader("Authorization", "Bearer " + data.token);
+
+	xhr.onreadystatechange = function () {
+		if(this.status == 401) return logout();
+
+		if(this.status !== 200){
+			notesContainer.innerHTML = "Failed to note data!";
+			return;
+		} 
+
+		notesContainer.innerHTML = this.responseText;
+	}
+
+	xhr.send();
+}
+
+function addNote(){
+	const orderId = ORDER_ID;
+	const note = document.getElementById("note").value;
+
+	const data = JSON.parse(localStorage.getItem("data") || null);
+	if(!data?.token) logout();
+
+	const xhr = new XMLHttpRequest();
+
+	const url = `check-in/orders/${orderId}/notes`;
+	
+	xhr.open("POST", url, true);
+
+	xhr.setRequestHeader("Authorization", "Bearer " + data.token);
+	xhr.setRequestHeader("Content-Type", "application/json");
+
+	xhr.onreadystatechange = function () {
+		if(this.status == 401) return logout();
+
+		if(this.status !== 200){
+			//Show some dialog
+			return;
+		}
+
+		document.getElementById("note").value = "";
+		getNotes(orderId);
+		listOrders();
+	}
+
+	xhr.send(JSON.stringify({note: note}));
 }
 
 function logout(){
 	window.location.replace("/logout");
 }
 
-addSearchFormEvent();
+addFormEvents();
 if(checkTokenExpiration()) logout();
 
 function htmlSpinner(){
