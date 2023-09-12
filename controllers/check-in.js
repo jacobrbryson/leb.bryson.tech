@@ -53,7 +53,8 @@ exports.checkInOrder = async function(req, res){
 
 	if(index == null) return res.status(500).json({ message: "Unable to locate order information to update"});
 	
-	const amount = !isNaN(partialAmount) ? partialAmount : orders[index][32];
+	const amount = Number(!isNaN(partialAmount) ? partialAmount : orders[index][32]) + Number(orders[index][39] ? orders[index][39] : 0);
+
 	const results = await sheetsController.updateSheet(
 		config.orderSheetId, orderSheet + `!AL${(index + 1)}:AP${(index + 1)}`, 
 		[[utilityHelper.getDateString(),req.userName, amount, '', '']]
