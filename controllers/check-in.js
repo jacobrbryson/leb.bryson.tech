@@ -23,7 +23,7 @@ exports.listOrders = async function(req, res){
 
 	if(!orders) return res.status(500).json({message: "Failed to get orders"});
 
-	return res.render("partials/check-in/orders", {orders: orders });
+	return res.render("partials/check-in/orders-cards", {orders: orders });
 }
 
 exports.checkInOrder = async function(req, res){

@@ -6,77 +6,83 @@
 			</tr>
 		<% } else { %>
 		<% orders.forEach(function(order) { %>
-			<div class="row d-flex">
-				<div class="card mt-2 py-2">
-					<div class="d-inline">
-						<span class="fw-bold d-block"><%= order[0] %></span>
-						<small class="text-muted"><%= order[2] %></small>
-						<% if(order[3]?.length) { %>
-							<small class="text-muted d-block">Note: <%= order[3] %></small>
-						<% } %>
-					</div>
-					<div class="d-inline">
-						<span class="d-block"><%= order[4] %>&nbsp;<%= order[5] %></span>
-						<small class="text-muted">
-							<%= order[12] %>
-						</small>
-					</div>
-					<div>
-						<span class="d-block"><strong style="font-size: 2em;"><%= order[39] ? order[39] : 0 %></strong>&nbsp;/&nbsp;<%= order[32] %></span>
-						<small class="text-muted">
-							avail&nbsp;/&nbsp;ordered
-						</small>
-					</div>
-					<div>
-						<div class="d-flex float-end">
-							<% if(!isNaN(order[44]) > 0) { %>
-								<span class="d-flex align-items-center me-3">
-									<i class="bi bi-journal-text text-danger" style="transform: scale(2);"></i>
-									<sup>
-										<span class="badge rounded-pill bg-danger">
-											<%= order[44] %>
-											<span class="visually-hidden">notes</span>
-										</span>
-									</sup>
-								</span>
-							<% } %>
-							<% if(order[32] === order[39]) { %>
-								<span class="d-flex me-2 align-items-center text-nowrap">
-									<i class="bi bi-check2-all me-2 text-success" style="transform: scale(2);"></i>Checked In!
-								</span>
-							<% } else if(!isNaN(order[39]) && order[39] > 0){ %>
-								<span class="d-flex me-2 align-items-center">
-									<i class="bi bi-back me-2"></i>Partial
-								</span>
-							<% } %>
-							<div class="<% if(order[32] != order[39]) { %>input-group<% } %>">
-								<button class="btn btn-lg btn-outline-success my-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-gear"></i></button>
-								<ul class="dropdown-menu">
-									<li>
-										<button class="dropdown-item" type="button" onclick="partialCheckInModal('<%= order[0] %>')" <% if(order[39] == order[32]) { %> disabled <% } %>>
-											<i class="bi bi-back"></i>
-											&nbsp;&nbsp;&nbsp;Partial Check-in
-										</button>
-									</li>
-									<li>
-										<button class="dropdown-item" type="button" onclick="notesModal('<%= order[0] %>')">
-											<i class="bi bi-journal-text"></i>
-											&nbsp;&nbsp;&nbsp;Notes
-										</button>
-									</li>
-									<div class="dropdown-divider"></div>
-									<li><button class="dropdown-item" type="button" onclick="undoCheckIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();" <% if(order[39] == 0) { %> disabled <% } %>>
-										<i class="bi bi-arrow-counterclockwise"></i>
-										&nbsp;&nbsp;&nbsp;Undo Check-in
-									</button></li>
-								</ul>
-								<% if(order[32] != order[39]) { %>
-									<button class="btn btn-lg btn-success" onclick="checkIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();"><i class="bi bi-check-lg mx-2"></i><span class="mx-2">Check-in</span></button>
+				<div class="card mt-2">
+					<div class="row p-2">
+						<div class="col-6 col-md-3 d-flex align-items-center justify-content-start">
+							<div>
+								<span class="d-block"><%= order[4] %>&nbsp;<%= order[5] %></span>
+							<small class="text-muted">
+								<%= order[12] %>
+							</small>
+							</div>
+						</div>
+						<div class="col-6 col-md-2 col-lg-1 d-flex align-items-center justify-content-end">
+							<h5 class="fw-bold float-end mb-0"><%= order[0] %></h5>
+						</div>
+						<div class="col-12 col-md-3 d-flex align-items-center justify-content-center">
+							<div class="text-center">
+								<span class="d-block"><strong style="font-size: 2em;"><%= order[39] ? order[39] : 0 %></strong>&nbsp;/&nbsp;<%= order[32] %></span>
+								<small class="text-muted">
+									picked-up&nbsp;/&nbsp;ordered
+								</small>
+							</div>
+						</div>
+						<div class="col-12 col-md-4 col-lg-5 my-2 d-md-flex justify-content-md-end">
+							<div class="d-flex justify-content-between justify-content-md-end">
+								<% if(!isNaN(order[44]) > 0) { %>
+									<span class="d-flex align-items-center mx-3">
+										<i class="bi bi-journal-text text-danger" style="transform: scale(2);"></i>
+										<sup>
+											<span class="badge rounded-pill bg-danger">
+												<%= order[44] %>
+												<span class="visually-hidden">notes</span>
+											</span>
+										</sup>
+									</span>
 								<% } %>
+								<% if(order[32] === order[39]) { %>
+									<span class="d-flex me-2 align-items-center text-nowrap">
+										<i class="bi bi-check2-all me-2 text-success" style="transform: scale(2);"></i>Checked In!
+									</span>
+								<% } else if(!isNaN(order[39]) && order[39] > 0){ %>
+									<span class="d-flex me-2 align-items-center">
+										<i class="bi bi-back me-2"></i>Partial
+									</span>
+								<% } %>
+								<div class="<% if(order[32] != order[39]) { %>input-group<% } %>" style="width:auto;">
+									<button class="btn btn-lg btn-outline-success" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-gear"></i></button>
+									<ul class="dropdown-menu">
+										<li>
+											<button class="dropdown-item" type="button" onclick="partialCheckInModal('<%= order[0] %>')" <% if(order[39] == order[32]) { %> disabled <% } %>>
+												<i class="bi bi-back"></i>
+												&nbsp;&nbsp;&nbsp;Partial Check-in
+											</button>
+										</li>
+										<li>
+											<button class="dropdown-item" type="button" onclick="notesModal('<%= order[0] %>')">
+												<i class="bi bi-journal-text"></i>
+												&nbsp;&nbsp;&nbsp;Notes
+											</button>
+										</li>
+										<div class="dropdown-divider"></div>
+										<li><button class="dropdown-item" type="button" onclick="undoCheckIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();" <% if(order[39] == 0) { %> disabled <% } %>>
+											<i class="bi bi-arrow-counterclockwise"></i>
+											&nbsp;&nbsp;&nbsp;Undo Check-in
+										</button></li>
+									</ul>
+									<% if(order[32] != order[39]) { %>
+										<button class="btn btn-lg btn-success" onclick="checkIn('<%= order[0] %>'); this.disabled=true; this.innerHTML=htmlSpinner();"><i class="bi bi-check-lg mx-2"></i><span class="mx-2 d-md-none d-lg-inline">Check-in</span></button>
+									<% } %>
+								</div>
 							</div>
 						</div>
 					</div>
+					<% if(order[3]?.length) { %>
+						<div class="card-footer text-center">
+							<p class="my-auto"><strong class="me-2">Note:</strong><%= order[3] %></p>
+						</div>
+						
+					<% } %>
 				</div>
-			</div>
 		<% }); 
 		} %> 
