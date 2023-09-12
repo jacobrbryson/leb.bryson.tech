@@ -21,9 +21,9 @@
 						</div>
 						<div class="col-12 col-md-3 d-flex align-items-center justify-content-center">
 							<div class="text-center">
-								<span class="d-block"><strong style="font-size: 2em;"><%= order[39] ? order[39] : 0 %></strong>&nbsp;/&nbsp;<%= order[32] %></span>
+								<span class="d-block"><strong style="font-size: 2em;"><%= (order[32] ? order[32] : 0) - (order[39] ? order[39] : 0)%></strong>&nbsp;/&nbsp;<%= order[32] %></span>
 								<small class="text-muted">
-									picked-up&nbsp;/&nbsp;ordered
+									avail&nbsp;/&nbsp;ordered
 								</small>
 							</div>
 						</div>
