@@ -116,6 +116,7 @@ async function getOrders(search){
 		search = search.toLowerCase();
 		if(
 			order[0].toLowerCase().includes(search)
+			|| order[3].toLowerCase().includes(search)
 			|| order[4].toLowerCase().includes(search)
 			|| order[5].toLowerCase().includes(search)
 			|| order[12].toLowerCase().includes(search)){
