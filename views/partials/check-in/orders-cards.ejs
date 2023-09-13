@@ -29,17 +29,6 @@
 						</div>
 						<div class="col-12 col-md-4 col-lg-5 my-2 d-md-flex justify-content-md-end">
 							<div class="d-flex justify-content-center justify-content-md-end">
-								<% if(!isNaN(order[44]) > 0) { %>
-									<span class="d-flex align-items-center mx-3">
-										<i class="bi bi-journal-text text-danger" style="transform: scale(2);"></i>
-										<sup>
-											<span class="badge rounded-pill bg-danger">
-												<%= order[44] %>
-												<span class="visually-hidden">notes</span>
-											</span>
-										</sup>
-									</span>
-								<% } %>
 								<% if(order[32] === order[39]) { %>
 									<span class="d-flex me-2 align-items-center text-nowrap">
 										<i class="bi bi-check2-all me-2 text-success" style="transform: scale(2);"></i>Checked In!
@@ -56,12 +45,6 @@
 											<button class="dropdown-item" type="button" onclick="partialCheckInModal('<%= order[0] %>')" <% if(order[39] == order[32]) { %> disabled <% } %>>
 												<i class="bi bi-back"></i>
 												&nbsp;&nbsp;&nbsp;Partial Check-in
-											</button>
-										</li>
-										<li>
-											<button class="dropdown-item" type="button" onclick="notesModal('<%= order[0] %>')">
-												<i class="bi bi-journal-text"></i>
-												&nbsp;&nbsp;&nbsp;Notes
 											</button>
 										</li>
 										<div class="dropdown-divider"></div>
