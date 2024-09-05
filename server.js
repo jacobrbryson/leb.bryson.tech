@@ -11,5 +11,7 @@ app.use(express.static(__dirname + '/public'));
 const routes = require("./routes");
 routes(app);
 
-app.listen(8088);
-console.log("Server is listening on port 8088");
+const PORT = parseInt(process.env.PORT) || 8080;
+
+app.listen(PORT);
+console.log(`Server is listening on port ${PORT}`);
