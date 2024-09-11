@@ -1,21 +1,24 @@
 <div class="modal fade" id="partialModal" tabindex="-1" aria-labelledby="partialModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="partialModalLabel">Partial Amount</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="partial_form">
-          <div class="input-group">
-            <input class="form-control form-control-lg" type="number" name="partialAmount" id="partialAmount" placeholder="Enter partial amount">
-            <button type="submit" class="btn btn-lg btn-success"><span class="px-2">Save</span></button>
+      <form id="partial_form">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="partialModalLabel">Partial Amount</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex justify-content-between" style="gap: 4px">
+            <span class="d-flex align-items-center justify-content-center w-100" style="font-size: 3rem; font-weight: 600;" id="amount"></span>
+            <div class="d-flex flex-column" style="gap: 4px">
+              <button type="button" onclick="amountUp();" class="btn btn-lg btn-dark"><i class="bi bi-arrow-bar-up px-4"></i></button>
+              <button type="button" onclick="amountDown()" class="btn btn-lg btn-dark"><i class="bi bi-arrow-bar-down px-4"></i></button>
+            </div>
           </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-lg btn-success"><span class="px-2">Save</span></button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

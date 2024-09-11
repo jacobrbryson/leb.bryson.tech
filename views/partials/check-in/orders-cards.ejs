@@ -42,7 +42,7 @@
 									<button class="btn btn-lg btn-outline-success" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-gear"></i></button>
 									<ul class="dropdown-menu">
 										<li>
-											<button class="dropdown-item" type="button" onclick="partialCheckInModal('<%= order[0] %>')" <% if(order[39] == order[32]) { %> disabled <% } %>>
+											<button class="dropdown-item" type="button" onclick="partialCheckInModal('<%= order[0] %>', '<%= (order[32] ? order[32] : 0) - (order[39] ? order[39] : 0)%>')" <% if(order[39] == order[32]) { %> disabled <% } %>>
 												<i class="bi bi-back"></i>
 												&nbsp;&nbsp;&nbsp;Partial Check-in
 											</button>

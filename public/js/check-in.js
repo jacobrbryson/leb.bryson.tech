@@ -1,4 +1,6 @@
 let ORDER_ID;
+let AVAIL_AMOUNT;
+let PARTIAL_AMOUNT;
 const PARTIAL_MODAL = new bootstrap.Modal(document.getElementById('partialModal'));
 
 function addFormEvents(){
@@ -135,19 +137,33 @@ function undoCheckIn(orderId){
 	xhr.send();
 }
 
-function partialCheckInModal(orderId){
+function partialCheckInModal(orderId, amount){
 	ORDER_ID = orderId;
+	PARTIAL_AMOUNT = 1;
+	AVAIL_AMOUNT = amount;
+	document.getElementById("amount").innerHTML = PARTIAL_AMOUNT;
 	PARTIAL_MODAL.show();
 }
 
-function partialCheckIn(){
-	const partialAmount = document.getElementById("partialAmount").value;
-	
+function partialCheckIn(){	
 	PARTIAL_MODAL.hide();
 
-	checkIn(ORDER_ID, partialAmount);
+	checkIn(ORDER_ID, PARTIAL_AMOUNT);
 
-	document.getElementById("partialAmount").value = '';
+	PARTIAL_AMOUNT = 0;
+	AVAIL_AMOUNT = 0;
+}
+
+function amountUp(){
+	if(PARTIAL_AMOUNT >= AVAIL_AMOUNT) return;
+	PARTIAL_AMOUNT += 1;
+	document.getElementById("amount").innerHTML = PARTIAL_AMOUNT;
+}
+
+function amountDown(){
+	if(PARTIAL_AMOUNT <= 1) return;
+	PARTIAL_AMOUNT -= 1;
+	document.getElementById("amount").innerHTML = PARTIAL_AMOUNT;
 }
 
 function notesModal(orderId){
