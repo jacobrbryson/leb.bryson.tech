@@ -6,7 +6,7 @@
 			</tr>
 		<% } else { %>
 		<% orders.forEach(function(order) { %>
-				<div class="card mt-2">
+				<div class="card mt-2<% if(order[31]?.includes('Patron Table')) { %> patron-table-row<% } %>">
 					<div class="row p-2">
 						<div class="col-6 col-md-3 d-flex align-items-center justify-content-start">
 							<div>
