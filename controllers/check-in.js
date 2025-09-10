@@ -4,127 +4,158 @@ const sheetsController = require("./sheets");
 const utilityHelper = require("../helpers/utility");
 const orderSheet = "Sheet1";
 
-exports.get = async function(req, res){
+exports.get = async function (req, res) {
 	return res.render("pages/check-in");
-}
+};
 
-exports.listOrders = async function(req, res){
+exports.listOrders = async function (req, res) {
 	const search = req.query.search;
 
 	await authController.verifyToken(req).catch((error) => {
 		console.error(error);
 	});
 
-	if(!req.userName) return res.status(401).send();
+	if (!req.userName) return res.status(401).send();
 
 	const orders = await getOrders(search).catch((error) => {
-		console.error(error)
+		console.error(error);
 	});
 
-	if(!orders) return res.status(500).json({message: "Failed to get orders"});
+	if (!orders)
+		return res.status(500).json({ message: "Failed to get orders" });
 
-	return res.render("partials/check-in/orders-cards", {orders: orders });
-}
+	return res.render("partials/check-in/orders-cards", { orders: orders });
+};
 
-exports.checkInOrder = async function(req, res){
+exports.checkInOrder = async function (req, res) {
 	await authController.verifyToken(req).catch((error) => {
 		console.error(error);
 	});
 
-	if(!req.userName) return res.status(401).send();
+	if (!req.userName) return res.status(401).send();
 
 	const orderId = req.params.orderId;
 	const partialAmount = req.params.partialAmount;
 
-	if(isNaN(orderId)) return res.status(500).json({message: "Invalid order id"});
+	if (isNaN(orderId))
+		return res.status(500).json({ message: "Invalid order id" });
 
 	//Need the raw sheet data so we can get the correct row data
-	const orders = await sheetsController.getSheet(config.orderSheetId, orderSheet).catch((error) => {
-		throw(error);
-	});
+	const orders = await sheetsController
+		.getSheet(config.orderSheetId, orderSheet)
+		.catch((error) => {
+			throw error;
+		});
 
 	let index = null;
-	for(i = 0; i < orders.length; i++){
-		if(orders[i][0] == orderId){
+	for (i = 0; i < orders.length; i++) {
+		if (orders[i][0] == orderId) {
 			index = i;
 			break;
 		}
 	}
 
-	if(index == null) return res.status(500).json({ message: "Unable to locate order information to update"});
-	
-	const amount = Number(!isNaN(partialAmount) ? partialAmount : orders[index][32]) + Number(orders[index][39] ? orders[index][39] : 0);
+	if (index == null)
+		return res
+			.status(500)
+			.json({ message: "Unable to locate order information to update" });
 
-	const results = await sheetsController.updateSheet(
-		config.orderSheetId, orderSheet + `!AL${(index + 1)}:AP${(index + 1)}`, 
-		[[utilityHelper.getDateString(),req.userName, amount, '', '']]
-	).catch((error) => {
-		console.error(error);
-	});
+	let calculatedAmount =
+		Number(!isNaN(partialAmount) ? partialAmount : orders[index][32]) +
+		Number(orders[index][39] ? orders[index][39] : 0);
 
-	if(!results) return res.status(500).json({ message: "Failed to update order"});
+	const amount =
+		calculatedAmount > Number(orders[index][32])
+			? orders[index][32]
+			: calculatedAmount;
+
+	const results = await sheetsController
+		.updateSheet(
+			config.orderSheetId,
+			orderSheet + `!AL${index + 1}:AP${index + 1}`,
+			[[utilityHelper.getDateString(), req.userName, amount, "", ""]]
+		)
+		.catch((error) => {
+			console.error(error);
+		});
+
+	if (!results)
+		return res.status(500).json({ message: "Failed to update order" });
 
 	return res.send();
-}
+};
 
-exports.undoCheckInOrder = async function(req, res){
+exports.undoCheckInOrder = async function (req, res) {
 	await authController.verifyToken(req).catch((error) => {
 		console.error(error);
 	});
 
-	if(!req.userName) return res.status(401).send();
+	if (!req.userName) return res.status(401).send();
 
 	const orderId = req.params.orderId;
-	if(isNaN(orderId)) return res.status(500).json({message: "Invalid order id"});
+	if (isNaN(orderId))
+		return res.status(500).json({ message: "Invalid order id" });
 
 	//Need the raw sheet data so we can get the correct row data
-	const orders = await sheetsController.getSheet(config.orderSheetId, orderSheet).catch((error) => {
-		throw(error);
-	});
+	const orders = await sheetsController
+		.getSheet(config.orderSheetId, orderSheet)
+		.catch((error) => {
+			throw error;
+		});
 
 	let index = null;
-	for(i = 0; i < orders.length; i++){
-		if(orders[i][0] == orderId){
+	for (i = 0; i < orders.length; i++) {
+		if (orders[i][0] == orderId) {
 			index = i;
 			break;
 		}
 	}
 
-	if(index == null) return res.status(500).json({ message: "Unable to locate order information to update"});
-	
-	const results = await sheetsController.updateSheet(
-		config.orderSheetId, orderSheet + `!AL${(index + 1)}:AP${(index + 1)}`, 
-		[['','','',utilityHelper.getDateString(),req.userName]]
-	).catch((error) => {
-		console.error(error);
-	});
+	if (index == null)
+		return res
+			.status(500)
+			.json({ message: "Unable to locate order information to update" });
 
-	if(!results) return res.status(500).json({ message: "Failed to update order"});
+	const results = await sheetsController
+		.updateSheet(
+			config.orderSheetId,
+			orderSheet + `!AL${index + 1}:AP${index + 1}`,
+			[["", "", "", utilityHelper.getDateString(), req.userName]]
+		)
+		.catch((error) => {
+			console.error(error);
+		});
+
+	if (!results)
+		return res.status(500).json({ message: "Failed to update order" });
 
 	res.json(true);
-}
+};
 
-async function getOrders(search){
-	const orders = await sheetsController.getSheet(config.orderSheetId, orderSheet).catch((error) => {
-		throw(error);
-	});
+async function getOrders(search) {
+	const orders = await sheetsController
+		.getSheet(config.orderSheetId, orderSheet)
+		.catch((error) => {
+			throw error;
+		});
 
 	let filteredOrderArray = [];
 
-	for(const order of orders){
-		if(!order[0]?.length || isNaN(order[0])) continue;
-
+	let index = 0;
+	for (const order of orders) {
+		index++;
+		if (index == 1) continue;
 		search = search.toLowerCase();
-		if(
-			order[0].toLowerCase().includes(search)
-			|| order[3].toLowerCase().includes(search)
-			|| order[4].toLowerCase().includes(search)
-			|| order[5].toLowerCase().includes(search)
-			|| order[12].toLowerCase().includes(search)){
-				filteredOrderArray.push(order);
-			}
+		if (
+			order[0]?.toLowerCase().includes(search) ||
+			order[3]?.toLowerCase().includes(search) ||
+			order[4]?.toLowerCase().includes(search) ||
+			order[5]?.toLowerCase().includes(search) ||
+			order[12]?.toLowerCase().includes(search)
+		) {
+			filteredOrderArray.push(order);
+		}
 	}
 
 	return filteredOrderArray;
 }
-
